@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="grid.css">
     <title>Altimetry GUI</title>
 </head>
 
@@ -13,6 +13,14 @@
         <h1>Altimetry Data</h1>
         <p>Loading content from the API: <b id="data">...</b></p>
     </main>
+
+    <h3>Data products</h3>
+    <p>Choose from three levels of data products <strong>level 1: 1 degree resolution</strong>, <strong>level 2: 0.25 degree resolution</strong> or <strong>level 3: 0.125 degree resolution</strong></p>
+    <div class="row">
+        <div class="col-md-4" id="product1">Level 1</div>
+        <div class="col-md-4" id="product2">Level 2</div>
+        <div class="col-md-4" id="product3">Level 3</div>
+    </div>
 
     <script>
         async function getData() {
@@ -25,7 +33,19 @@
             console.log(data);
             document.querySelector('#data').textContent = data;
         }
-        getData();
+        // getData();
+        document.getElementById('product1')[0]
+            .addEventListener('click', function(event) {
+                getData();
+            });
+        document.getElementById('product2')[0]
+            .addEventListener('click', function(event) {
+                getData();
+            });
+        document.getElementById('product3')[0]
+            .addEventListener('click', function(event) {
+                getData();
+            });
     </script>
 </body>
 
