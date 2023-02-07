@@ -19,7 +19,9 @@
             const {
                 text
             } = await (await fetch(`/api/getData`));
-            document.querySelector('#name').textContent = text;
+            document.querySelector('#from').textContent = text;
+            document.querySelector('#to').textContent = text;
+            document.querySelector('#data').textContent = text;
         }());
     </script>
 </body>
