@@ -11,7 +11,7 @@
 <body>
     <main>
         <h1>Altimetry Data</h1>
-        <p>Loading content from the API: <b id="from">...</b></p>
+        <p>Loading content from the API: <b id="data">...</b></p>
     </main>
 
     <script>
@@ -20,10 +20,10 @@
 
             const response = await fetch('/api/getData');
 
-            data = await response;
+            data = await response.json();
 
             console.log(data);
-            document.querySelector('#from').textContent = data;
+            document.querySelector('#data').textContent = data;
         }
         getData();
     </script>
