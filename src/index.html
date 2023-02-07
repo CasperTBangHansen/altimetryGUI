@@ -18,8 +18,8 @@
         (async function() {
             const {
                 text
-            } = await (await fetch(`/api/getData`).then());
-            document.querySelector('#from').textContent = text();
+            } = await (await fetch(`/api/getData`).resolve());
+            document.querySelector('#from').textContent = text().resolve();
         }());
     </script>
 </body>
