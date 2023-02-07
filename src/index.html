@@ -5,13 +5,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="styles.css">
-    <title>Vanilla Python App</title>
+    <title>Altimetry GUI</title>
 </head>
 
 <body>
     <main>
-        <h1>Vanilla Python App</h1>
-        <p>Loading content from the API: <b id="name">...</b></p>
+        <h1>Altimetry Data</h1>
+        <p>Loading content from the API: <b id="from">...</b></p>
     </main>
 
     <script>
@@ -20,8 +20,6 @@
                 text
             } = await (await fetch(`/api/getData`));
             document.querySelector('#from').textContent = text;
-            document.querySelector('#to').textContent = text;
-            document.querySelector('#data').textContent = text;
         }());
     </script>
 </body>
