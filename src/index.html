@@ -15,12 +15,17 @@
     </main>
 
     <script>
-        (async function() {
-            const {
-                text
-            } = await fetch(`/api/getData`).then(r => document.querySelector('#from').textContent = r);
-            console.log(text)
-        }());
+        async function getData() {
+            let data;
+
+            const response = await fetch('/api/getData');
+
+            data = await response;
+
+            console.log(data);
+            document.querySelector('#from').textContent = data;
+        }
+        getData();
     </script>
 </body>
 
