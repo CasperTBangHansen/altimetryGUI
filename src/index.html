@@ -18,9 +18,9 @@
     <h3>Data products</h3>
     <p>Choose from three levels of data products <strong>level 1: 1 degree resolution</strong>, <strong>level 2: 0.25 degree resolution</strong> or <strong>level 3: 0.125 degree resolution</strong></p>
     <div class="row">
-        <div class="col-md-4" id="product1">Level 1</div>
-        <div class="col-md-4" id="product2">Level 2</div>
-        <div class="col-md-4" id="product3">Level 3</div>
+        <button class="col-md-4" onclick="getData()">Level 1</div>
+        <button class="col-md-4" onclick="getData()">Level 2</div>
+        <button class="col-md-4" onclick="getData()">Level 3</div>
     </div>
 
     <script>
@@ -35,15 +35,15 @@
             document.querySelector('#data').textContent = data;
         }
         // getData();
-        document.getElementById('product1')[0]
+        document.getElementById('product1')
             .addEventListener('click', function(event) {
                 getData();
             });
-        document.getElementById('product2')[0]
+        document.getElementById('product2')
             .addEventListener('click', function(event) {
                 getData();
             });
-        document.getElementById('product3')[0]
+        document.getElementById('product3')
             .addEventListener('click', function(event) {
                 getData();
             });
