@@ -18,7 +18,7 @@
         (async function() {
             const {
                 text
-            } = await (await fetch(`/api/getData`)).json();
+            } = await (await fetch(`/api/getData`));
             document.querySelector('#name').textContent = text;
         }());
     </script>
