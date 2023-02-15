@@ -3,3 +3,11 @@
 # Manually managing azure-functions-worker may cause unexpected issues
 
 azure-functions
+azure-storage-blob
+azure-data-tables
+psycopg2
+SQLAlchemy
+geoalchemy2
+bcrypt
+netcdf4
+xarray
