@@ -13,9 +13,13 @@ except:
     except:
         try:
             from altimetryGUI.api.shared_src.HandleInput import parse_input, create_error_response
-            import_status = "Abs1"
+            import_status = "Abs2"
         except:
-            import_status = "FAILED!"
+            try:
+                from shared_src.HandleInput import parse_input, create_error_response
+                import_status = "Abs3"
+            except:
+                import_status = "FAILED!"
     
 # from os import environ
 import json
