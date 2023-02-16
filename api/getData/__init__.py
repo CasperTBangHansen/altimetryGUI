@@ -1,45 +1,45 @@
 import logging
-from typing import Optional
-from datetime import datetime, date
+# from typing import Optional
+# from datetime import datetime, date
 import azure.functions as func
-from ..shared_src.databases import database, tables
+# from ..shared_src.databases import database, tables
 from ..shared_src.HandleInput import parse_input, create_error_response
-from os import environ
+# from os import environ
 import json
 
 # Logging
 logging.getLogger(__name__)
 
 # Database
-database = database.Database(
-    username=environ["ALTIMETRY_USERNAME"],
-    password=environ["ALTIMETRY_PASSWORD"],
-    host=environ["ALTIMETRY_HOST"],
-    port=environ["ALTIMETRY_DATABASE_PORT"],
-    database_name=environ["ALTIMETRY_DATABASE"],
-    engine=environ["ALTIMETRY_DATABASE_CONNECTION_ENGINE"],
-    database_type=environ["ALTIMETRY_DATABASE_TYPE"],
-    create_tables=environ["ALTIMETRY_CREATE_TABLES"] == 'true'
-)
+# database = database.Database(
+#     username=environ["ALTIMETRY_USERNAME"],
+#     password=environ["ALTIMETRY_PASSWORD"],
+#     host=environ["ALTIMETRY_HOST"],
+#     port=environ["ALTIMETRY_DATABASE_PORT"],
+#     database_name=environ["ALTIMETRY_DATABASE"],
+#     engine=environ["ALTIMETRY_DATABASE_CONNECTION_ENGINE"],
+#     database_type=environ["ALTIMETRY_DATABASE_TYPE"],
+#     create_tables=environ["ALTIMETRY_CREATE_TABLES"] == 'true'
+# )
 
-def getData(start_date: date, end_date: date):
-    """Access data and return"""
-    logging.info("Requesting data from the blob stroage")
-    logging.info(f"Data interval is {start_date} - {end_date}")
-    return "BLAA"
+# def getData(start_date: date, end_date: date):
+#     """Access data and return"""
+#     logging.info("Requesting data from the blob stroage")
+#     logging.info(f"Data interval is {start_date} - {end_date}")
+#     return "BLAA"
 
-def handle_input(date_str: Optional[str], placeholder: date) -> date | None:
-    """
-    Format a date string format to datetime
-    or use the placeholder if date_str is None
-    """
-    if date_str is None:
-        return placeholder
-    try:
-        # Cast to datetime
-        return datetime.strptime(date_str, "%Y-%m-%d").date()
-    except ValueError or TypeError:
-        return None
+# def handle_input(date_str: Optional[str], placeholder: date) -> date | None:
+#     """
+#     Format a date string format to datetime
+#     or use the placeholder if date_str is None
+#     """
+#     if date_str is None:
+#         return placeholder
+#     try:
+#         # Cast to datetime
+#         return datetime.strptime(date_str, "%Y-%m-%d").date()
+#     except ValueError or TypeError:
+#         return None
 
 def main(req: func.HttpRequest) -> func.HttpResponse:
     logging.info('Requesting data using the getData endpoint')
