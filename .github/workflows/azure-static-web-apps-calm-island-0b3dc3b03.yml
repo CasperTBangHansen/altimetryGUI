@@ -13,6 +13,7 @@ env:
   AZURE_FUNCTIONAPP_PACKAGE_PATH: '/api'  # set this to the path to your web app project, defaults to the repository root
   PYTHON_VERSION: 3.10.5                # set this to the python version to use (supports 3.8, 3.9, 3.9)
   PYTHON_DEFAULT_VERSION: 3.10.5
+  SCM_DO_BUILD_DURING_DEPLOYMENT: false
 
 jobs:
   build_and_deploy_job:
