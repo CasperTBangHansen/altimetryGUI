@@ -1,4 +1,4 @@
-FAILED = ""
+FAILED = "BASIC:"
 try:
     from . import BlobCommunication as BlobCommunication
 except:

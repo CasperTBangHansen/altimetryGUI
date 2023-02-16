@@ -3,39 +3,26 @@
 # from datetime import datetime, date
 import azure.functions as func
 # from ..shared_src.databases import database, tables
-status = None
-status_src = "_ "
+status_src = "MAIN: "
 import_status = "v1 "
 try:
-    from ..shared_src import HandleInput
-    import_status += "Relative"
-    status = HandleInput.status
+    import shared_src
+    status_src += shared_src.FAILED
+    import_status += "First"
 except:
     try:
-        from api.shared_src import HandleInput
-        import_status += "Abs1"
-        status = HandleInput.status
-        from api import shared_src
+        from . import shared_src
         status_src += shared_src.FAILED
+        import_status += "Second"
     except:
-        try:
-            from altimetryGUI.api.shared_src import HandleInput
-            import_status += "Abs2"
-            status = HandleInput.status
-            from altimetryGUI.api import shared_src
-            status_src += shared_src.FAILED
-        except:
-            try:
-                from shared_src import HandleInput
-                import_status += "Abs3"
-                status = HandleInput.status
-                import shared_src
-                status_src += shared_src.FAILED
-            except:
-                import_status += "FAILED"
-import_status += f" {status}"
-import_status += f", {status_src}"
+        import_status += "FAILED"
 
+import_status += f", {status_src}"
+paths = []
+import os
+for path, subdirs, files in os.walk('.'):
+    for name in files:
+        paths.append(os.path.join(path, name))
 
 # from os import environ
 import json
@@ -92,4 +79,4 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
     # data = getData(start_date=start_date, end_date=end_date) # type: ignore
 
     # Return data
-    return func.HttpResponse(json.dumps({"status": import_status}))
+    return func.HttpResponse(json.dumps({"status": import_status, "paths": paths}))
