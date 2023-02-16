@@ -1,43 +1,44 @@
-# import logging
-# from typing import Optional
-# from datetime import datetime, date
 import azure.functions as func
-# from ..shared_src.databases import database, tables
-
 try:
-    import sys
+    import logging
+    from typing import Optional
+    from datetime import datetime, date
+    from shared_src.databases import database, tables
 
-    version = str(sys.version)
-except:
-    version = ''
+    from os import environ
+    import json
 
-try:
-    import shared_src
-    item = {"version": version, "status": "Success", "errors": shared_src.FAILED, "exceptions": shared_src.Exceptions}
+    # Logging
+    logging.getLogger(__name__)
+    status_import = "Success"
 except Exception as e:
-    item = {"version": version, "status": "Failed", "errors": "Failed", "exceptions": repr(e)}
-
-
-
-
-# from os import environ
-import json
-
-# Logging
-# logging.getLogger(__name__)
+    status_import = repr(e)
 
 # Database
-# database = database.Database(
-#     username=environ["ALTIMETRY_USERNAME"],
-#     password=environ["ALTIMETRY_PASSWORD"],
-#     host=environ["ALTIMETRY_HOST"],
-#     port=environ["ALTIMETRY_DATABASE_PORT"],
-#     database_name=environ["ALTIMETRY_DATABASE"],
-#     engine=environ["ALTIMETRY_DATABASE_CONNECTION_ENGINE"],
-#     database_type=environ["ALTIMETRY_DATABASE_TYPE"],
-#     create_tables=environ["ALTIMETRY_CREATE_TABLES"] == 'true'
-# )
+try:
+    DATABASE = database.Database(
+        username=environ["ALTIMETRY_USERNAME"],
+        password=environ["ALTIMETRY_PASSWORD"],
+        host=environ["ALTIMETRY_HOST"],
+        port=environ["ALTIMETRY_DATABASE_PORT"],
+        database_name=environ["ALTIMETRY_DATABASE"],
+        engine=environ["ALTIMETRY_DATABASE_CONNECTION_ENGINE"],
+        database_type=environ["ALTIMETRY_DATABASE_TYPE"],
+        create_tables=environ["ALTIMETRY_CREATE_TABLES"] == 'true'
+    )
+    status_database = "Success"
+except Exception as e:
+    status_database = repr(e) 
 
+try:
+    products = DATABASE.get_product_names()
+    status_req = products
+except Exception as e:
+    status_req = repr(e)
+try:
+    port = environ["ALTIMETRY_DATABASE_PORT"]
+except Exception as e:
+    port = repr(e)
 # def getData(start_date: date, end_date: date):
 #     """Access data and return"""
 #     logging.info("Requesting data from the blob stroage")
@@ -75,4 +76,4 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
     # data = getData(start_date=start_date, end_date=end_date) # type: ignore
 
     # Return data
-    return func.HttpResponse(json.dumps(item))
+    return func.HttpResponse(json.dumps({'status_import' : status_import, 'status_database': status_database, 'status_req': status_req, 'port': port}))
