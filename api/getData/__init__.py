@@ -5,9 +5,17 @@ import azure.functions as func
 # from ..shared_src.databases import database, tables
 try:
     from ..shared_src.HandleInput import parse_input, create_error_response
-    import_status = "SUCCESS"
+    import_status = "Relative"
 except:
-    import_status = "FAILED!"
+    try:
+        from api.shared_src.HandleInput import parse_input, create_error_response
+        import_status = "Abs1"
+    except:
+        try:
+            from altimetryGUI.api.shared_src.HandleInput import parse_input, create_error_response
+            import_status = "Abs1"
+        except:
+            import_status = "FAILED!"
     
 # from os import environ
 import json
