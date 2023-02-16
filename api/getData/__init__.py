@@ -4,12 +4,20 @@
 import azure.functions as func
 # from ..shared_src.databases import database, tables
 
+try:
+    import sys
+
+    version = str(sys.version)
+except:
+    version = ''
 
 try:
     import shared_src
-    item = {"status": "Success", "errors": shared_src.FAILED, "exceptions": shared_src.Exceptions}
+    item = {"version": version, "status": "Success", "errors": shared_src.FAILED, "exceptions": shared_src.Exceptions}
 except Exception as e:
-    item = {"status": "Failed", "errors": "Failed", "exceptions": repr(e)}
+    item = {"version": version, "status": "Failed", "errors": "Failed", "exceptions": repr(e)}
+
+
 
 
 # from os import environ
