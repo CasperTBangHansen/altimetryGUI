@@ -12,6 +12,7 @@ on:
 env: # Add environment variables here
   PYTHON_DEFAULT_VERSION: "3.10"
   PYTHON_VERSION: "3.10"
+  VERBOSE: true
 
 jobs:
   build_and_deploy_job:
