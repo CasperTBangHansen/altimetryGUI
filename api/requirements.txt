@@ -5,7 +5,7 @@
 azure-functions
 azure-storage-blob
 azure-data-tables
-psycopg2
+psycopg2-binary
 SQLAlchemy
 geoalchemy2
 bcrypt

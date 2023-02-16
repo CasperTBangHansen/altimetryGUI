@@ -23,8 +23,6 @@ jobs:
       - uses: actions/checkout@v2
         with:
           submodules: true
-      - name: Install packages
-        run: sudo apt-get install libpq5 -y && sudo apt-get install libpq-dev -y
       - name: Build And Deploy
         id: builddeploy
         uses: Azure/static-web-apps-deploy@v1
@@ -44,8 +42,6 @@ jobs:
     runs-on: ubuntu-latest
     name: Close Pull Request Job
     steps:
-      - name: Install packages
-        run: sudo apt-get install libpq5 -y && sudo apt-get install libpq-dev -y
       - name: Close Pull Request
         id: closepullrequest
         uses: Azure/static-web-apps-deploy@v1
