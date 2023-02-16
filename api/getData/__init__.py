@@ -3,26 +3,7 @@
 # from datetime import datetime, date
 import azure.functions as func
 # from ..shared_src.databases import database, tables
-status_src = "MAIN: "
-import_status = "v1 "
-try:
-    import shared_src
-    status_src += shared_src.FAILED
-    import_status += "First"
-except:
-    try:
-        from . import shared_src
-        status_src += shared_src.FAILED
-        import_status += "Second"
-    except:
-        import_status += "FAILED"
-
-import_status += f", {status_src}"
-paths = []
-import os
-for path, subdirs, files in os.walk('.'):
-    for name in files:
-        paths.append(os.path.join(path, name))
+import shared_src
 
 # from os import environ
 import json
@@ -56,7 +37,7 @@ import json
 #     if date_str is None:
 #         return placeholder
 #     try:
-#         # Cast to datetime
+#         # Cast t  o datetime
 #         return datetime.strptime(date_str, "%Y-%m-%d").date()
 #     except ValueError or TypeError:
 #         return None
@@ -79,4 +60,4 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
     # data = getData(start_date=start_date, end_date=end_date) # type: ignore
 
     # Return data
-    return func.HttpResponse(json.dumps({"status": import_status, "paths": paths}))
+    return func.HttpResponse(json.dumps({"status": "Success", "errors": shared_src.FAILED, "exceptions": shared_src.Exceptions}))
