@@ -4,7 +4,7 @@
     "swa-start": {
       "appLocation": "src",
       "apiLocation": "api",
-      "outputLocation": "."
+      "outputLocation": "src"
     }
   }
 }
