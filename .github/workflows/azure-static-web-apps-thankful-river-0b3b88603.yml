@@ -19,7 +19,7 @@ jobs:
     if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.action != 'closed')
     runs-on: ubuntu-latest
     run: sudo apt-get install libpq5 -y
-    run: sudo apt-get install libpq-dev
+    run: sudo apt-get install libpq-dev -y
     name: Build and Deploy Job
     steps:
       - uses: actions/checkout@v2
@@ -43,7 +43,7 @@ jobs:
     if: github.event_name == 'pull_request' && github.event.action == 'closed'
     runs-on: ubuntu-latest
     run: sudo apt-get install libpq5 -y
-    run: sudo apt-get install libpq-dev
+    run: sudo apt-get install libpq-dev -y
     name: Close Pull Request Job
     steps:
       - name: Close Pull Request
