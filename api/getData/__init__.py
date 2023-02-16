@@ -5,6 +5,7 @@ import azure.functions as func
 from ..shared_src.databases import database, tables
 from ..shared_src.HandleInput import parse_input, create_error_response
 from os import environ
+import json
 
 # Logging
 logging.getLogger(__name__)
@@ -44,18 +45,18 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
     logging.info('Requesting data using the getData endpoint')
     
     # Get start and end date
-    from_date = parse_input(req, 'from')
-    to_date = parse_input(req, 'to')
-    start_date = handle_input(from_date, datetime.strptime("1991-08-03","%Y-%m-%d").date())
-    end_date = handle_input(to_date, datetime.now().date())
+    # from_date = parse_input(req, 'from')
+    # to_date = parse_input(req, 'to')
+    # start_date = handle_input(from_date, datetime.strptime("1991-08-03","%Y-%m-%d").date())
+    # end_date = handle_input(to_date, datetime.now().date())
     
     # Check dates
-    for date, field, param in zip([start_date, end_date], ['from', 'to'], [from_date, to_date]):
-        if date is None:
-            return create_error_response(field, "has an invalid format", param, 400, "%Y-%m-%d")
+    # for date, field, param in zip([start_date, end_date], ['from', 'to'], [from_date, to_date]):
+        # if date is None:
+            # return create_error_response(field, "has an invalid format", param, 400, "%Y-%m-%d")
         
     # Request data from the blob storage
-    data = getData(start_date=start_date, end_date=end_date) # type: ignore
+    # data = getData(start_date=start_date, end_date=end_date) # type: ignore
 
     # Return data
-    return func.HttpResponse(f"{data}")
+    return func.HttpResponse(json.dumps({"status": "success"}))
