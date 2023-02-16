@@ -3,24 +3,28 @@
 # from datetime import datetime, date
 import azure.functions as func
 # from ..shared_src.databases import database, tables
+status = None
+import_status = "v1 "
 try:
-    from ..shared_src.HandleInput import parse_input, create_error_response
-    import_status = "Relative"
+    from ..shared_src.HandleInput import parse_input, create_error_response, status
+    import_status += "Relative"
 except:
     try:
-        from api.shared_src.HandleInput import parse_input, create_error_response
-        import_status = "Abs1"
+        from api.shared_src.HandleInput import parse_input, create_error_response, status
+        import_status += "Abs1"
     except:
         try:
-            from altimetryGUI.api.shared_src.HandleInput import parse_input, create_error_response
-            import_status = "Abs2"
+            from altimetryGUI.api.shared_src.HandleInput import parse_input, create_error_response, status
+            import_status += "Abs2"
         except:
             try:
-                from shared_src.HandleInput import parse_input, create_error_response
-                import_status = "Abs3"
+                from shared_src.HandleInput import parse_input, create_error_response, status
+                import_status += "Abs3"
             except:
-                import_status = "FAILED!"
-    
+                import_status += "FAILED"
+import_status += f" {status}"
+
+
 # from os import environ
 import json
 

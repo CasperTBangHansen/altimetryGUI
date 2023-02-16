@@ -1,7 +1,12 @@
 import azure.functions as func
 from typing import Any, Optional
 import logging
-from .databases.database import Database
+try:
+    from .databases.database import Database
+    status = True
+except:
+    status = False
+
 import json
 
 logger = logging.getLogger(__name__)
@@ -24,7 +29,7 @@ def parse_input(req: func.HttpRequest, value_name: str) -> Any | None:
     except ValueError:
         return None
 
-def parse_login(req: func.HttpRequest, database: Database) -> bool:
+def parse_login(req: func.HttpRequest, database: Any) -> bool:
     """ Parse request object and tries to login"""
     if (username := parse_input(req, 'username')) is None:
         logging.error(f"Username or password was not given")
