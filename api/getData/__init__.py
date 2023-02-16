@@ -1,18 +1,15 @@
 import azure.functions as func
-try:
-    import logging
-    from typing import Optional
-    from datetime import datetime, date
-    from shared_src.databases import database, tables
+import logging
+from typing import Optional
+from datetime import datetime, date
+from shared_src.databases import database, tables
 
-    from os import environ
-    import json
+from os import environ
+import json
+import traceback
 
-    # Logging
-    logging.getLogger(__name__)
-    status_import = "Success"
-except Exception as e:
-    status_import = repr(e)
+# Logging
+logging.getLogger(__name__)
 
 # Database
 try:
@@ -27,20 +24,18 @@ try:
         create_tables=environ["ALTIMETRY_CREATE_TABLES"] == 'true'
     )
     status_database = "Success"
-    ERROR = {"ERROR": "NONE"}
 except Exception as e:
-    ERROR = database.ERROR
-    status_database = repr(e) 
+    status_database = traceback.format_exc()
 
 try:
     products = DATABASE.get_product_names()
     status_req = products
 except Exception as e:
-    status_req = repr(e)
+    status_req = traceback.format_exc()
 try:
     port = environ["ALTIMETRY_DATABASE_PORT"]
 except Exception as e:
-    port = repr(e)
+    port = traceback.format_exc()
 # def getData(start_date: date, end_date: date):
 #     """Access data and return"""
 #     logging.info("Requesting data from the blob stroage")
@@ -78,4 +73,4 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
     # data = getData(start_date=start_date, end_date=end_date) # type: ignore
 
     # Return data
-    return func.HttpResponse(json.dumps({'status_import' : status_import, 'status_database': status_database, 'status_req': status_req, 'port': port, 'error': ERROR}))
+    return func.HttpResponse(json.dumps({'status_database': status_database, 'status_req': status_req, 'port': port}))

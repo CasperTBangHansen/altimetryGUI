@@ -1,28 +1,13 @@
-ERROR = {}
-try:
-    from sqlalchemy import create_engine, select
-    from sqlalchemy.orm import sessionmaker, InstrumentedAttribute
-    from typing import Sequence, Optional, Tuple, Any
-except Exception as e:
-    ERROR['sqlalchemy'] = repr(e)
-try:
-    from . import tables
-    import logging
-except Exception as e:
-    ERROR['tables'] = repr(e)
-try:
-    from datetime import date
-    import xarray as xr
-except Exception as e:
-    ERROR['xarray'] = repr(e)
-try:
-    from ..xarray_operations import encode
-except Exception as e:
-    ERROR['xarray_operations'] = repr(e)
-try:
-    logging.getLogger(__name__)
-except:
-    pass
+
+from sqlalchemy import create_engine, select
+from sqlalchemy.orm import sessionmaker, InstrumentedAttribute
+from typing import Sequence, Optional, Tuple, Any
+from . import tables
+import logging
+from datetime import date
+import xarray as xr
+from ..xarray_operations import encode
+logging.getLogger(__name__)
 
 class Database:
     def __init__(self, username: str, password: str, host: str, port: str | int, database_name: str, engine: str, database_type: str, create_tables: bool = True) -> None:
