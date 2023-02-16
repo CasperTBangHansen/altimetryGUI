@@ -1,14 +1,14 @@
-import logging
+# import logging
 # from typing import Optional
 # from datetime import datetime, date
 import azure.functions as func
 # from ..shared_src.databases import database, tables
-from ..shared_src.HandleInput import parse_input, create_error_response
+# from ..shared_src.HandleInput import parse_input, create_error_response
 # from os import environ
 import json
 
 # Logging
-logging.getLogger(__name__)
+# logging.getLogger(__name__)
 
 # Database
 # database = database.Database(
@@ -42,7 +42,7 @@ logging.getLogger(__name__)
 #         return None
 
 def main(req: func.HttpRequest) -> func.HttpResponse:
-    logging.info('Requesting data using the getData endpoint')
+    # logging.info('Requesting data using the getData endpoint')
     
     # Get start and end date
     # from_date = parse_input(req, 'from')
