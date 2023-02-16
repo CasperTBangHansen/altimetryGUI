@@ -3,7 +3,14 @@
 # from datetime import datetime, date
 import azure.functions as func
 # from ..shared_src.databases import database, tables
-import shared_src
+
+
+try:
+    import shared_src
+    item = {"status": "Success", "errors": shared_src.FAILED, "exceptions": shared_src.Exceptions}
+except Exception as e:
+    item = {"status": "Failed", "errors": "Failed", "exceptions": repr(e)}
+
 
 # from os import environ
 import json
@@ -60,4 +67,4 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
     # data = getData(start_date=start_date, end_date=end_date) # type: ignore
 
     # Return data
-    return func.HttpResponse(json.dumps({"status": "Success", "errors": shared_src.FAILED, "exceptions": shared_src.Exceptions}))
+    return func.HttpResponse(json.dumps(item))
