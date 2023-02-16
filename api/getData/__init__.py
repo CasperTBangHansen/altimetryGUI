@@ -27,7 +27,9 @@ try:
         create_tables=environ["ALTIMETRY_CREATE_TABLES"] == 'true'
     )
     status_database = "Success"
+    ERROR = {"ERROR": "NONE"}
 except Exception as e:
+    ERROR = database.ERROR
     status_database = repr(e) 
 
 try:
@@ -76,4 +78,4 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
     # data = getData(start_date=start_date, end_date=end_date) # type: ignore
 
     # Return data
-    return func.HttpResponse(json.dumps({'status_import' : status_import, 'status_database': status_database, 'status_req': status_req, 'port': port}))
+    return func.HttpResponse(json.dumps({'status_import' : status_import, 'status_database': status_database, 'status_req': status_req, 'port': port, 'error': ERROR}))
