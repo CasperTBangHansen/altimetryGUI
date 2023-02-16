@@ -4,25 +4,37 @@
 import azure.functions as func
 # from ..shared_src.databases import database, tables
 status = None
+status_src = "_ "
 import_status = "v1 "
 try:
-    from ..shared_src.HandleInput import parse_input, create_error_response, status
+    from ..shared_src import HandleInput
     import_status += "Relative"
+    status = HandleInput.status
 except:
     try:
-        from api.shared_src.HandleInput import parse_input, create_error_response, status
+        from api.shared_src import HandleInput
         import_status += "Abs1"
+        status = HandleInput.status
+        from api import shared_src
+        status_src += shared_src.FAILED
     except:
         try:
-            from altimetryGUI.api.shared_src.HandleInput import parse_input, create_error_response, status
+            from altimetryGUI.api.shared_src import HandleInput
             import_status += "Abs2"
+            status = HandleInput.status
+            from altimetryGUI.api import shared_src
+            status_src += shared_src.FAILED
         except:
             try:
-                from shared_src.HandleInput import parse_input, create_error_response, status
+                from shared_src import HandleInput
                 import_status += "Abs3"
+                status = HandleInput.status
+                import shared_src
+                status_src += shared_src.FAILED
             except:
                 import_status += "FAILED"
 import_status += f" {status}"
+import_status += f", {status_src}"
 
 
 # from os import environ

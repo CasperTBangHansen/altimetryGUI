@@ -1,6 +1,7 @@
 import azure.functions as func
 from typing import Any, Optional
 import logging
+status = "HIT_HANDLEINPUT"
 try:
     from .databases.database import Database
     status = True
