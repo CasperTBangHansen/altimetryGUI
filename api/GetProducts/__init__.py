@@ -4,6 +4,7 @@ from shared_src.HandleInput import parse_input
 from os import environ
 from typing import Any
 import json
+import traceback
 
 # Database
 DATABASE = database.Database(
@@ -44,6 +45,7 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
             products = DATABASE.get_product_names()
             response_type = "product"
         return func.HttpResponse(json.dumps({"status": "success", "type": response_type, "products": products}), status_code = 200)
-    except:
-        return func.HttpResponse(json.dumps({"status": "failed"}), status_code = 500)
+    except Exception as e:
+        trace = traceback.format_exception(e)
+        return func.HttpResponse(json.dumps({"status": "failed" , "error" : trace}), status_code = 500)
     
