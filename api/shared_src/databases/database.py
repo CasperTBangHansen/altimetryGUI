@@ -1,5 +1,5 @@
 
-from sqlalchemy import create_engine, select
+from sqlalchemy import create_engine, select, Row
 from sqlalchemy.orm import sessionmaker, InstrumentedAttribute
 from typing import Sequence, Optional, Tuple, Any, List, Dict
 from . import tables
@@ -225,9 +225,15 @@ class Database:
         logging.info("Getting all product names in database")
         with self.session(expire_on_commit=False) as session, session.begin():
             return session.scalars(select(tables.Product).filter_by(name=product_name)).first()
+    
+    @staticmethod
+    def row_to_dict(row: Row, keys: Sequence[str]) -> Dict[str, Any]:
+        """Converts row object to a dict"""
+        return {key: value for key, value in zip(keys, row)}
 
     def get_product_and_resolutions(self) -> List[Dict[str, str | float | int]]:
         """ Get all products which have a resolution and join the tables"""
+        logging.info("Getting all product and resolutions in database")
         with self.session(expire_on_commit=False) as session, session.begin():
             # Define the select statement
             stmt = select(
@@ -238,11 +244,14 @@ class Database:
                 tables.Product.name.label('product_name')
             ).join(tables.Product).where(tables.Resolution.product_id == tables.Product.id)
             
+            # Get output keys            
+            keys = [str(column).split('.')[-1] for column in stmt.columns]
+
             # Execute the query
             results = session.execute(stmt)
             
             # Convert results to list of dicts
-            return [dict(r) for r in results]
+            return [self.row_to_dict(r, keys) for r in results]
 
 
     def get_resolutions_by_name(self, resolution_name: str) -> tables.Resolution | None:
