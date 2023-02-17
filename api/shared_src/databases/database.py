@@ -1,7 +1,7 @@
 
 from sqlalchemy import create_engine, select
 from sqlalchemy.orm import sessionmaker, InstrumentedAttribute
-from typing import Sequence, Optional, Tuple, Any
+from typing import Sequence, Optional, Tuple, Any, List, Dict
 from . import tables
 import logging
 from datetime import date
@@ -225,6 +225,25 @@ class Database:
         logging.info("Getting all product names in database")
         with self.session(expire_on_commit=False) as session, session.begin():
             return session.scalars(select(tables.Product).filter_by(name=product_name)).first()
+
+    def get_product_and_resolutions(self) -> List[Dict[str, str | float | int]]:
+        """ Get all products which have a resolution and join the tables"""
+        with self.session(expire_on_commit=False) as session, session.begin():
+            # Define the select statement
+            stmt = select(
+                tables.Resolution.name.label('resolution_name'),
+                tables.Resolution.x,
+                tables.Resolution.y,
+                tables.Resolution.time_days,
+                tables.Product.name.label('product_name')
+            ).join(tables.Product).where(tables.Resolution.product_id == tables.Product.id)
+            
+            # Execute the query
+            results = session.execute(stmt)
+            
+            # Convert results to list of dicts
+            return [dict(r) for r in results]
+
 
     def get_resolutions_by_name(self, resolution_name: str) -> tables.Resolution | None:
         """ Get all resolution by name in the database"""
