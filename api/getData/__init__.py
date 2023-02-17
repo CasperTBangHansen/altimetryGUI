@@ -12,30 +12,16 @@ import traceback
 logging.getLogger(__name__)
 
 # Database
-try:
-    DATABASE = database.Database(
-        username=environ["ALTIMETRY_USERNAME"],
-        password=environ["ALTIMETRY_PASSWORD"],
-        host=environ["ALTIMETRY_HOST"],
-        port=environ["ALTIMETRY_DATABASE_PORT"],
-        database_name=environ["ALTIMETRY_DATABASE"],
-        engine=environ["ALTIMETRY_DATABASE_CONNECTION_ENGINE"],
-        database_type=environ["ALTIMETRY_DATABASE_TYPE"],
-        create_tables=environ["ALTIMETRY_CREATE_TABLES"] == 'true'
-    )
-    status_database = "Success"
-except Exception as e:
-    status_database = traceback.format_exc()
-
-try:
-    products = DATABASE.get_product_names()
-    status_req = products
-except Exception as e:
-    status_req = traceback.format_exc()
-try:
-    port = environ["ALTIMETRY_DATABASE_PORT"]
-except Exception as e:
-    port = traceback.format_exc()
+DATABASE = database.Database(
+    username=environ["ALTIMETRY_USERNAME"],
+    password=environ["ALTIMETRY_PASSWORD"],
+    host=environ["ALTIMETRY_HOST"],
+    port=environ["ALTIMETRY_DATABASE_PORT"],
+    database_name=environ["ALTIMETRY_DATABASE"],
+    engine=environ["ALTIMETRY_DATABASE_CONNECTION_ENGINE"],
+    database_type=environ["ALTIMETRY_DATABASE_TYPE"],
+    create_tables=environ["ALTIMETRY_CREATE_TABLES"] == 'true'
+)
 # def getData(start_date: date, end_date: date):
 #     """Access data and return"""
 #     logging.info("Requesting data from the blob stroage")
@@ -73,4 +59,4 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
     # data = getData(start_date=start_date, end_date=end_date) # type: ignore
 
     # Return data
-    return func.HttpResponse(json.dumps({'status_database': status_database, 'status_req': status_req, 'port': port}))
+    return func.HttpResponse(json.dumps({'status_database': "SUCCESS"}))

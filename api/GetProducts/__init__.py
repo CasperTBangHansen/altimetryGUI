@@ -1,5 +1,5 @@
 import azure.functions as func
-from ..shared_src.databases import database
+from shared_src.databases import database
 from os import environ
 import json
 

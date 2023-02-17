@@ -1,6 +1,6 @@
 import azure.functions as func
-from ..shared_src.databases import database, tables
-from ..shared_src.HandleInput import parse_input, create_error_response, parse_login
+from shared_src.databases import database, tables
+from shared_src.HandleInput import parse_input, create_error_response, parse_login
 from os import environ
 import json
 
