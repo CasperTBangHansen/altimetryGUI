@@ -6,7 +6,6 @@ from shared_src.databases import database, tables
 
 from os import environ
 import json
-import traceback
 
 # Logging
 logging.getLogger(__name__)
