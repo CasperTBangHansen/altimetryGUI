@@ -1,4 +1,5 @@
 import azure.functions as func
+from . import GLOBAL_HEADERS
 from typing import Any, Optional
 import logging
 import json
