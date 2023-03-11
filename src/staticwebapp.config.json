@@ -1,5 +1,9 @@
 {
   "platform": {
     "apiRuntime": "python:3.10"
+  },
+  "globalHeaders": {
+    "Access-Control-Allow-Origin": "*",
+    "Access-Control-Allow-Methods": "GET, POST"
   }
 }
