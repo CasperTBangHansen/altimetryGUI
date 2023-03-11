@@ -3,9 +3,10 @@ from sqlalchemy import ForeignKey, String, Engine, Double, Text, text
 import sqlalchemy.orm as orm
 import geoalchemy2 as geo
 import bcrypt
-from typing import List, Any, Dict, overload, Type, Sequence
+from typing import List, Any, Dict, overload, Sequence
+from os import environ
 
-SALT: bytes = b"$2b$12$Vy6XwJ3nWrWe7.vJRfQHTu"
+SALT: bytes = environ["SALT"].encode()
 BaseClass: Any = orm.declarative_base() # type: ignore
 Base: orm.DeclarativeMeta = BaseClass
 class User(BaseClass):

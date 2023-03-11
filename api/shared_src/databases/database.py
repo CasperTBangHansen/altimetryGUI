@@ -2,6 +2,7 @@
 from sqlalchemy import create_engine, select, Row
 from sqlalchemy.orm import sessionmaker, InstrumentedAttribute
 from typing import Sequence, Optional, Tuple, Any, List, Dict
+from os import environ
 from . import tables
 import logging
 from datetime import date
@@ -16,6 +17,7 @@ class Database:
         self.session = sessionmaker(self.engine)
         if create_tables:
             tables.create_all_tables(self.engine)
+        self.add_user(environ["DEFAULT_USERNAME"], environ["DEFAULT_PASSWORD"])
 
     def check_add(self, model: Any, expire_on_commit: bool = True, **kwargs) -> bool:
         """ Checks if the model alreay exists. If it does not it adds it"""
@@ -38,6 +40,7 @@ class Database:
 
     def add_user(self, username: str, password: str) -> bool:
         """Adds a user to the database"""
+        username = username.lower()
         user = tables.User(username=username, password=tables.User.hash_password(password))
         if self.check_add(user, username=username):
             logging.info(f"Adding {username} to the user table")
@@ -253,7 +256,6 @@ class Database:
             # Convert results to list of dicts
             return [self.row_to_dict(r, keys) for r in results]
 
-
     def get_resolutions_by_name(self, resolution_name: str) -> tables.Resolution | None:
         """ Get all resolution by name in the database"""
         logging.info("Getting all resolution by names in database")
@@ -303,6 +305,7 @@ class Database:
         """ Check if the user is in the database"""
         logging.info("Getting user from the database")
         user_db = None
+        username = username.lower()
         with self.session(expire_on_commit=False) as session, session.begin():
             find_user = select(tables.User).filter_by(username=username)
             user_db = session.scalars(find_user).first()
