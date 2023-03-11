@@ -1,10 +1,14 @@
 import azure.functions as func
-from . import GLOBAL_HEADERS
 from typing import Any, Optional
 import logging
 import json
 
 logger = logging.getLogger(__name__)
+
+GLOBAL_HEADERS = {
+    "Access-Control-Allow-Origin": "*",
+    "Access-Control-Allow-Methods": "GET, POST, PUT"
+}
 
 def create_error_response(field: str, text: str, value: Any, status_code: int, correct_value: Optional[Any]) -> func.HttpResponse:
     """Constructs an error message based on the field"""
