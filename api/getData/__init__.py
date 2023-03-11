@@ -1,4 +1,5 @@
 import azure.functions as func
+from shared_src import GLOBAL_HEADERS
 import logging
 from typing import Optional
 from datetime import datetime, date
@@ -58,4 +59,4 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
     # data = getData(start_date=start_date, end_date=end_date) # type: ignore
 
     # Return data
-    return func.HttpResponse(json.dumps({'status_database': "SUCCESS"}))
+    return func.HttpResponse(json.dumps({'status_database': "SUCCESS"}), headers=GLOBAL_HEADERS)

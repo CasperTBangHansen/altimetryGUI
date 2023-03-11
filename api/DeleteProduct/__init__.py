@@ -1,4 +1,5 @@
 import azure.functions as func
+from shared_src import GLOBAL_HEADERS
 from shared_src.databases import database, tables
 from shared_src.HandleInput import parse_input, create_error_response, parse_login
 from os import environ
@@ -21,7 +22,8 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
     if not parse_login(req, DATABASE):
         return func.HttpResponse(
             json.dumps({"status": "failed", "error": "Username or password was not passed or where incorrect"}),
-            status_code=404
+            status_code=404,
+            headers=GLOBAL_HEADERS
         )
     # Get parameters and check them
     if (product_name := parse_input(req, 'name')) is None:
@@ -33,8 +35,9 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
 
     # Add product to database
     if (DATABASE.delete_product(tables.Product(name=product_name))):
-        return func.HttpResponse(json.dumps({"status": "success"}), status_code = 200)
+        return func.HttpResponse(json.dumps({"status": "success"}), status_code = 200, headers=GLOBAL_HEADERS)
     return func.HttpResponse(
         json.dumps({"status": "failed", "error": "Failed to remove product from database"}),
-        status_code = 404
+        status_code = 404,
+        headers=GLOBAL_HEADERS
     )

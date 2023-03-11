@@ -11,7 +11,7 @@ def create_error_response(field: str, text: str, value: Any, status_code: int, c
     if correct_value is not None:
         error_str += f" should have been: {correct_value}."
     logging.error(error_str)
-    return func.HttpResponse(json.dumps({"status": "failed", "error": error_str}), status_code=status_code)
+    return func.HttpResponse(json.dumps({"status": "failed", "error": error_str}), status_code=status_code, headers=GLOBAL_HEADERS)
 
 def parse_input(req: func.HttpRequest, value_name: str) -> Any | None:
     """ Get value from params in http request or from the boy"""

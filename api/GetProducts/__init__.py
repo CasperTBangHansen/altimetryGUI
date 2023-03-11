@@ -1,4 +1,5 @@
 import azure.functions as func
+from shared_src import GLOBAL_HEADERS
 from shared_src.databases import database
 from shared_src.HandleInput import parse_input
 from os import environ
@@ -44,8 +45,8 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
             # Get products from the database
             products = DATABASE.get_product_names()
             response_type = "product"
-        return func.HttpResponse(json.dumps({"status": "success", "type": response_type, "products": products}), status_code = 200)
+        return func.HttpResponse(json.dumps({"status": "success", "type": response_type, "products": products}), status_code = 200, headers=GLOBAL_HEADERS)
     except Exception as e:
         trace = traceback.format_exception(e)
-        return func.HttpResponse(json.dumps({"status": "failed" , "error" : trace}), status_code = 500)
+        return func.HttpResponse(json.dumps({"status": "failed" , "error" : trace}), status_code = 500, headers=GLOBAL_HEADERS)
     

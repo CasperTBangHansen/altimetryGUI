@@ -1,4 +1,5 @@
 import azure.functions as func
+from shared_src import GLOBAL_HEADERS
 from shared_src.databases import database, tables
 from shared_src.HandleInput import parse_input, create_error_response
 from os import environ
@@ -33,10 +34,10 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
     try:
         resolutions = DATABASE.get_resolutions_by_product(product_name=product_name, product_id=product_id)
         if resolutions is None:
-            return func.HttpResponse(json.dumps({"status": "failed", "error": "product did not exist"}), status_code = 404)
+            return func.HttpResponse(json.dumps({"status": "failed", "error": "product did not exist"}), status_code = 404, headers=GLOBAL_HEADERS)
         
         # If successfull format the resolution table
         resolution_dict = tables.get_fields_as_dict(resolutions)
-        return func.HttpResponse(json.dumps({"status": "success", "resolutions": resolution_dict}), status_code = 200)
+        return func.HttpResponse(json.dumps({"status": "success", "resolutions": resolution_dict}), status_code = 200, headers=GLOBAL_HEADERS)
     except ValueError as e:
-        return func.HttpResponse(json.dumps({"status": "failed", "error": e}), status_code = 400)
+        return func.HttpResponse(json.dumps({"status": "failed", "error": e}), status_code = 400, headers=GLOBAL_HEADERS)
