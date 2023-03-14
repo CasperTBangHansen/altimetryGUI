@@ -3,10 +3,10 @@ var products;
 async function getData(resolution_name, product_name, start_date, end_date) {
     const URL = `https://orange-island-0aafb1f03.2.azurestaticapps.net/api/GetData?resolution_name=${resolution_name}&product_name=${product_name}&start_date=${start_date}&end_date=${end_date}`;
     // Process data from api
-    return await fetch(URL)
+    await fetch(URL)
     .then(response => {
         if (response.status == 200) {
-            return response.json();
+            return response;
         }
         throw new Error(response);
     })
@@ -15,6 +15,11 @@ async function getData(resolution_name, product_name, start_date, end_date) {
             return products['file'];
         }
         throw new Error(products);
+    }).then(file => {
+        var link = document.createElement('a');
+        link.href = window.URL.createObjectURL(file);
+        link.download = "AltimetryGridding.zip";
+        link.click();
     })
     .catch(err => {});
 }
@@ -136,7 +141,9 @@ function download(){
     var res = document.querySelector('#resolution-dropdown-label').dataset.resolution;
     var start_date = document.querySelector('#start-date div a').dataset.date;
     var end_date = document.querySelector('#end-date div a').dataset.date;
-    console.log("HIT");
+    start_date = '2004-06-10'
+    end_date = '2004-06-12'
+    getData(res, prod, start_date, end_date);
 }
 
 

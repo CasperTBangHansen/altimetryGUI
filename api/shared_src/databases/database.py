@@ -337,6 +337,7 @@ class Database:
             if res_id is None:
                 logging.warn(f"No resolution with the name '{name}' exists.")
                 return None
+            logging.info("Getting grids")
             output = session.scalars(
                 select(tables.Grid)
                 .filter(

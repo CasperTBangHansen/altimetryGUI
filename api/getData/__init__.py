@@ -65,7 +65,11 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
     if isinstance((end_date := parse_date(req, 'end_date')), func.HttpResponse):
         return end_date
     logging.info(f"Requesting data {resolution}, {product}, {start_date}, {end_date}")
-    rasters = DATABASE.get_grids_by_resolution(resolution_name='Neighbors=100, kernel=linear')
+    rasters = DATABASE.get_grids_by_resolution_and_dates(
+        start_date=start_date,
+        end_date=end_date,
+        resolution_name=resolution # type: ignore
+    )
     
     if rasters is None:
         return create_error_response('resolution', "did not exist in the database", resolution, 400, None)
@@ -74,5 +78,5 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
     with zipfile.ZipFile(zip_buffer, "a", zipfile.ZIP_DEFLATED, False) as zip_file:
         for grid in grids:
             file_name = str(grid.time.data).split('T')[0]
-            zip_file.writestr(f"{file_name}.nc", grid.to_netcdf(None))
-    return func.HttpResponse(json.dumps({'status': "success", 'file': zip_file}), status_code = 200, headers=GLOBAL_HEADERS)
+            zip_file.writestr(f"{file_name}.nc", grid.to_netcdf(None, engine='scipy'))
+    return func.HttpResponse(zip_buffer.getvalue(), status_code = 200, headers=GLOBAL_HEADERS)
