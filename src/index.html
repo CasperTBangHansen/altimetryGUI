@@ -3,43 +3,63 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="styles.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.4.1/dist/css/bootstrap.min.css" integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu" crossorigin="anonymous">
+    <link rel="stylesheet" href="calender.css">
+    <link rel='stylesheet' href='https://s3-us-west-2.amazonaws.com/s.cdpn.io/1462889/unicons.css'>
+    <script src="api_calls.js"></script>
+    <script src="calender.js"></script>
     <title>Altimetry GUI</title>
 </head>
 
 <body>
-    <div class="container content">
-        <h1>Altimetry Data</h1>
-        <div class="row">
-            <h3>Data products</h3>
-            <p>Choose from three levels of data products. <strong>level 1: 1 degree resolution</strong>, <strong>level 2: 0.25 degree resolution</strong> or <strong>level 3: 0.125 degree resolution</strong></p>
-        </div>
-        <div class="row">
-            <button type="button" class="btn btn-lg btn-outline-secondary btn-space" onclick="getData()">Level 1!</button>
-            <button type="button" class="btn btn-lg btn-outline-secondary btn-space" onclick="getData()">Level 2</button>
-            <button type="button" class="btn btn-lg btn-outline-secondary btn-space" onclick="getData()">Level 3</button>
-        </div>
+    <input class="dark-light" type="checkbox" id="dark-light" name="dark-light"/>
+    <label for="dark-light"></label>
+    <div class="light-back"></div> 
 
-        <div class="row">
-            <p>Loading content from the API: <b id="data">...</b></p>
-        </div>
-    </div>
-
-    <script>
-        async function getData() {
-            let data;
-
-            const response = await fetch('/api/getData');
-
-            data = await response.json();
-
-            console.log(data);
-            document.querySelector('#data').textContent = data;
-        }
-        // getData();
-    </script>
+    <label class="logo" target="_blank">
+        <h1 class="font-color-change">
+            Altimetry Gridding
+        </h1>
+    </label>
+    <table class="table4">
+        <tr>
+            <td class="sec-center td4">
+                <input class="dropdown" type="checkbox" id="product-dropdown-input" name="product-dropdown"/>
+                <label class="for-dropdown" for="product-dropdown-input" id="product-dropdown-label">Products<i class="uil uil-arrow-down"></i></label>
+                <div class="section-dropdown" id="product-dropdown"> 
+                </div>
+            </td>
+            <td class="sec-center td4">
+                <input class="dropdown" type="checkbox" id="resolution-dropdown-input" name="resolution-dropdown"/>
+                <label class="for-dropdown" for="resolution-dropdown-input" id="resolution-dropdown-label">Resolutions<i class="uil uil-arrow-down"></i></label>
+                <div class="section-dropdown" id="resolution-dropdown"> 
+                </div>
+            </td>
+            <td class="sec-center td4" id="start-date">
+                <div class="date-font-color-change">
+                    <a href="#" style="width: 100%">START DATE</a>
+                </div>
+                <div class="calendar"></div>
+            </td>
+            <td class="sec-center td4" id="end-date">
+                <div class="date-font-color-change">
+                    <a href="#" style="width: 100%">END DATE</a>
+                </div>
+                <div class="calendar"></div>
+            </td>
+        </tr>
+    </table>
+    <table class="table3">
+        <tr>
+            <td class="sec-center td3"> </td>
+            <td class="sec-center td3"> </td>
+            <td class="sec-center td3 download_button">
+                <a href="#" id="download">Download</a>
+            </td>
+            <td class="sec-center td3"> </td>
+            <td class="sec-center td3"> </td>
+        </tr>
+    </table>
 </body>
 
 </html>

@@ -1,9 +1,12 @@
 import azure.functions as func
-from shared_src import GLOBAL_HEADERS
+from shared_src import GLOBAL_HEADERS, xarray_operations
 import logging
 from typing import Optional
 from datetime import datetime, date
+from shared_src.HandleInput import create_error_response
 from shared_src.databases import database, tables
+import zipfile
+import io
 
 from os import environ
 import json
@@ -22,41 +25,16 @@ DATABASE = database.Database(
     database_type=environ["ALTIMETRY_DATABASE_TYPE"],
     create_tables=environ["ALTIMETRY_CREATE_TABLES"] == 'true'
 )
-# def getData(start_date: date, end_date: date):
-#     """Access data and return"""
-#     logging.info("Requesting data from the blob stroage")
-#     logging.info(f"Data interval is {start_date} - {end_date}")
-#     return "BLAA"
-
-# def handle_input(date_str: Optional[str], placeholder: date) -> date | None:
-#     """
-#     Format a date string format to datetime
-#     or use the placeholder if date_str is None
-#     """
-#     if date_str is None:
-#         return placeholder
-#     try:
-#         # Cast t  o datetime
-#         return datetime.strptime(date_str, "%Y-%m-%d").date()
-#     except ValueError or TypeError:
-#         return None
 
 def main(req: func.HttpRequest) -> func.HttpResponse:
-    # logging.info('Requesting data using the getData endpoint')
-    
-    # Get start and end date
-    # from_date = parse_input(req, 'from')
-    # to_date = parse_input(req, 'to')
-    # start_date = handle_input(from_date, datetime.strptime("1991-08-03","%Y-%m-%d").date())
-    # end_date = handle_input(to_date, datetime.now().date())
-    
-    # Check dates
-    # for date, field, param in zip([start_date, end_date], ['from', 'to'], [from_date, to_date]):
-        # if date is None:
-            # return create_error_response(field, "has an invalid format", param, 400, "%Y-%m-%d")
-        
-    # Request data from the blob storage
-    # data = getData(start_date=start_date, end_date=end_date) # type: ignore
-
-    # Return data
-    return func.HttpResponse(json.dumps({'status_database': "SUCCESS"}), headers=GLOBAL_HEADERS)
+    rasters = DATABASE.get_grids_by_resolution(resolution_name='Neighbors=100, kernel=linear')
+    if rasters is None:
+        return create_error_response('resolution', "did not exist in the database", 'Neighbors=100, kernel=linear', 400, None)
+        return func.HttpResponse(json.dumps({'status': "ERROR"}), status_code = 400, headers=GLOBAL_HEADERS)
+    grids = [xarray_operations.raster_to_xarray(raster) for raster in rasters]
+    zip_buffer = io.BytesIO()
+    with zipfile.ZipFile(zip_buffer, "a", zipfile.ZIP_DEFLATED, False) as zip_file:
+        for grid in grids:
+            file_name = str(grid.time.data).split('T')[0]
+            zip_file.writestr(f"{file_name}.nc", grid.to_netcdf(None))
+    return func.HttpResponse(json.dumps({'status': "success"}), status_code = 200, headers=GLOBAL_HEADERS)
