@@ -1,27 +1,39 @@
-var products;
+function base64_to_array_buffer(base64) {
+    var binaryString = window.atob(base64);
+    var binaryLen = binaryString.length;
+    var bytes = new Uint8Array(binaryLen);
+    for (var i = 0; i < binaryLen; i++) {
+       var ascii = binaryString.charCodeAt(i);
+       bytes[i] = ascii;
+    }
+    return bytes;
+ }
 
-async function getData(resolution_name, product_name, start_date, end_date) {
+ function save_byte_array(fileName, bytes) {
+    var blob = new Blob([bytes], {type: "application/zip"});
+    var link = document.createElement('a');
+    link.href = window.URL.createObjectURL(blob);
+    link.download = fileName;
+    link.click();
+};
+
+async function get_grids(resolution_name, product_name, start_date, end_date) {
     const URL = `https://orange-island-0aafb1f03.2.azurestaticapps.net/api/GetData?resolution_name=${resolution_name}&product_name=${product_name}&start_date=${start_date}&end_date=${end_date}`;
     // Process data from api
     await fetch(URL)
     .then(response => {
         if (response.status == 200) {
-            return response;
+            return response.text();
         }
         throw new Error(response);
     })
-    .then(products => {
-        if(products['status'] === "success" && products['type'] === "both"){
-            return products['file'];
-        }
-        throw new Error(products);
-    }).then(file => {
-        var link = document.createElement('a');
-        link.href = window.URL.createObjectURL(file);
-        link.download = "AltimetryGridding.zip";
-        link.click();
+    .then(file => {
+        var buffer = base64_to_array_buffer(file);
+        save_byte_array("AltimetryGridding.zip", buffer);
     })
     .catch(err => {});
+    download_button.onclick = download;
+    download_button.textContent = "Download";
 }
 
 async function get_products() {
@@ -143,11 +155,13 @@ function download(){
     var end_date = document.querySelector('#end-date div a').dataset.date;
     start_date = '2004-06-10'
     end_date = '2004-06-12'
-    getData(res, prod, start_date, end_date);
+    download_button.textContent = "Processing..."
+    download_button.removeAttribute("onclick");
+    get_grids(res, prod, start_date, end_date);
 }
 
 
-
+var product;
 async function setup(){
     products = await get_products();
     make_product_dropdowns(products);

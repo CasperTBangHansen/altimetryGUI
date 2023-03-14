@@ -1,15 +1,15 @@
 import azure.functions as func
 from shared_src import GLOBAL_HEADERS, xarray_operations
 import logging
-from typing import Optional, Any
-from datetime import datetime, date
+from typing import Any
+from datetime import datetime
 from shared_src.HandleInput import create_error_response, parse_input
-from shared_src.databases import database, tables
+from shared_src.databases import database
 import zipfile
 import io
+import base64
 
 from os import environ
-import json
 
 # Logging
 logging.getLogger(__name__)
@@ -79,4 +79,8 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
         for grid in grids:
             file_name = str(grid.time.data).split('T')[0]
             zip_file.writestr(f"{file_name}.nc", grid.to_netcdf(None, engine='scipy'))
-    return func.HttpResponse(zip_buffer.getvalue(), status_code = 200, headers=GLOBAL_HEADERS)
+    return func.HttpResponse(
+        base64.b64encode(zip_buffer.getvalue()),
+        status_code = 200,
+        headers=GLOBAL_HEADERS
+    )
