@@ -74,7 +74,15 @@ function CalendarControl(id) {
         monthLabel.innerHTML = calendarControl.calMonthName[calendar.getMonth()];
       },
       selectDate: function (e) {
-        selected_date = `${calendar.getFullYear()}-${calendar.getMonth()}-${e.target.textContent}`;
+        var month_str = calendar.getMonth().toLocaleString('en-US', {
+          minimumIntegerDigits: 2,
+          useGrouping: false
+        })
+        var day_str = e.target.textContent.toLocaleString('en-US', {
+          minimumIntegerDigits: 2,
+          useGrouping: false
+        })
+        selected_date = `${calendar.getFullYear()}-${month_str}-${day_str}`;
         date = `${e.target.textContent} ${
             calendarControl.calMonthName[calendar.getMonth()]
         } ${calendar.getFullYear()}`;

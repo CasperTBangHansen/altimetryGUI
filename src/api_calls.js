@@ -18,7 +18,7 @@ function base64_to_array_buffer(base64) {
 };
 
 async function get_grids(resolution_name, product_name, start_date, end_date) {
-    const URL = `https://orange-island-0aafb1f03.2.azurestaticapps.net/api/GetData?resolution_name=${resolution_name}&product_name=${product_name}&start_date=${start_date}&end_date=${end_date}`;
+    const URL = `/api/GetData?resolution_name=${resolution_name}&product_name=${product_name}&start_date=${start_date}&end_date=${end_date}`;
     // Process data from api
     await fetch(URL)
     .then(response => {
@@ -32,12 +32,13 @@ async function get_grids(resolution_name, product_name, start_date, end_date) {
         save_byte_array("AltimetryGridding.zip", buffer);
     })
     .catch(err => {});
+    var download_button = document.querySelector(".download_button");
     download_button.onclick = download;
     download_button.textContent = "Download";
 }
 
 async function get_products() {
-    const URL ='https://orange-island-0aafb1f03.2.azurestaticapps.net/api/GetProducts?resolution=true';
+    const URL ='/api/GetProducts?resolution=true';
     // Process data from api
     return await fetch(URL)
     .then(response => {
@@ -89,9 +90,9 @@ function format_resolution(resolution){
     var p_lat = document.createElement("p")
     p_title.textContent = resolution["resolution_name"];
     p_title.style.fontWeight = 900;
-    p_time.textContent =  `Time resolution: ${resolution["time_days"]}`;
-    p_lon.textContent =  `Longitude resolution: ${resolution["x"]}`;
-    p_lat.textContent =  `Latitude resolution: ${resolution["y"]}`;
+    p_time.textContent = `Time resolution: ${resolution["time_days"]}`;
+    p_lon.textContent = `Longitude resolution: ${resolution["x"]}`;
+    p_lat.textContent = `Latitude resolution: ${resolution["y"]}`;
     div.replaceChildren(p_title, p_time, p_lon, p_lat);
     return div;
 }
@@ -153,8 +154,7 @@ function download(){
     var res = document.querySelector('#resolution-dropdown-label').dataset.resolution;
     var start_date = document.querySelector('#start-date div a').dataset.date;
     var end_date = document.querySelector('#end-date div a').dataset.date;
-    start_date = '2004-06-10'
-    end_date = '2004-06-12'
+    var download_button = document.querySelector(".download_button");
     download_button.textContent = "Processing..."
     download_button.removeAttribute("onclick");
     get_grids(res, prod, start_date, end_date);
