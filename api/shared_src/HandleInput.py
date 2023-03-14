@@ -24,7 +24,7 @@ def parse_input(req: func.HttpRequest, value_name: str) -> Any | None:
         return value
     try:
         req_body = req.get_json()
-        return req_body.get('name')
+        return req_body.get(value_name)
     except ValueError:
         return None
 

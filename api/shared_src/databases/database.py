@@ -304,6 +304,54 @@ class Database:
             return output
         return None
     
+    def get_grids_by_resolution_and_dates(
+        self,
+        start_date: date,
+        end_date: date,
+        resolution: Optional[tables.Resolution] = None,
+        resolution_name: Optional[str] = None,
+        resolution_id: Optional[str] = None,
+    ) -> Sequence[tables.Resolution] | None:
+        """ Get all grid for a resolution in the database"""
+        # Handle all combinations of input
+        res_id = None
+        name = None
+        if resolution is not None:
+            if resolution.name is not None:
+                name = resolution_name
+            elif resolution_id is not None:
+                res_id = resolution_id
+            else:
+                raise ValueError("resolution was not None, but did not containg name or id")
+        elif resolution_name is not None:
+            name = resolution_name
+        elif resolution_id is not None:
+            res_id = resolution_id
+        else:
+            raise ValueError("resolution, resolution_name and resolution_id where all None. One of them have to be provided")
+        
+        # Get resolution in table
+        with self.session(expire_on_commit=False) as session, session.begin():
+            if res_id is None:
+                res_id = session.scalars(select(tables.Resolution.id).filter_by(name=name)).first()
+            if res_id is None:
+                logging.warn(f"No resolution with the name '{name}' exists.")
+                return None
+            output = session.scalars(
+                select(tables.Grid)
+                .filter(
+                    tables.Grid.resolution_id==res_id,
+                    tables.Grid.date >= start_date,
+                    tables.Grid.date <= end_date
+                )
+                ).all()
+            if len(output) == 0:
+                logging.warn(f"No grids with resolution id {res_id} exists.")
+                return []
+            logging.info(f"Found {len(output)} grids with resolution_id = {res_id}")
+            return output
+        return None
+
     def get_grids_by_resolution(
         self,
         resolution: Optional[tables.Resolution] = None,

@@ -24,7 +24,7 @@ def parse_name(req: func.HttpRequest, param: str) -> func.HttpResponse | Any:
     # Get parameters and check them
     if (out_name := parse_input(req, param)) is None:
         return create_error_response(param, "has an invalid format", out_name, 400, "'string'")
-    if len(out_name) > 30:
+    if len(out_name) > 50:
          return create_error_response(param, "is too long.", out_name, 400, "less than 30 characters")
     if len(out_name) == 0:
         return create_error_response(param, "is empty.", out_name, 400, "between 1-30 characters")

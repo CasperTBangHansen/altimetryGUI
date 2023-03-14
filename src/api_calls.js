@@ -1,18 +1,22 @@
 var products;
 
-function getData() {
-    const URL ='https://orange-island-0aafb1f03.2.azurestaticapps.net/api/getData';
-    const response = fetch(URL, {
-        mode: "no-cors",
-        headers: {
-          'Access-Control-Allow-Origin':'*'
+async function getData() {
+    const URL ='https://orange-island-0aafb1f03.2.azurestaticapps.net/api/GetData';
+    // Process data from api
+    return await fetch(URL)
+    .then(response => {
+        if (response.status == 200) {
+            return response.json();
         }
-    });
-
-    let data = response.json();
-
-    console.log(data);
-    document.querySelector('#data').textContent = data;
+        throw new Error(response);
+    })
+    .then(products => {
+        if(products['status'] === "success" && products['type'] === "both"){
+            return products['file'];
+        }
+        throw new Error(products);
+    })
+    .catch(err => {});
 }
 
 async function get_products() {

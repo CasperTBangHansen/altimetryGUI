@@ -1,9 +1,9 @@
 import azure.functions as func
 from shared_src import GLOBAL_HEADERS, xarray_operations
 import logging
-from typing import Optional
+from typing import Optional, Any
 from datetime import datetime, date
-from shared_src.HandleInput import create_error_response
+from shared_src.HandleInput import create_error_response, parse_input
 from shared_src.databases import database, tables
 import zipfile
 import io
@@ -26,15 +26,52 @@ DATABASE = database.Database(
     create_tables=environ["ALTIMETRY_CREATE_TABLES"] == 'true'
 )
 
+def parse_name(req: func.HttpRequest, param: str) -> func.HttpResponse | Any:
+    """Check and converts request object with param name to the correct type or response."""
+    # Get parameters and check them
+    if (out_name := parse_input(req, param)) is None:
+        return create_error_response(param, "has an invalid format", out_name, 400, "'string'")
+    if len(out_name) > 50:
+         return create_error_response(param, "is too long.", out_name, 400, "less than 50 characters")
+    if len(out_name) == 0:
+        return create_error_response(param, "is empty.", out_name, 400, "between 1-50 characters")
+    return out_name
+
+def parse_date(req: func.HttpRequest, param: str) -> func.HttpResponse | Any:
+    """Check and converts request object with param name to the correct type or response."""
+    # Get parameters and check them
+    if (date_str := parse_input(req, param)) is None:
+        return create_error_response(param, "has an invalid format", date_str, 400, "'YYYY-mm-dd'")
+    try:
+        return datetime.strptime(date_str, "%Y-%m-%d").date()
+    except ValueError:
+        return create_error_response(param, "has an invalid format", date_str, 400, "'YYYY-mm-dd'")
+
 def main(req: func.HttpRequest) -> func.HttpResponse:
+    # Resolution name
+    if isinstance((resolution := parse_name(req, 'name')), func.HttpResponse):
+        return resolution
+
+    # Product name
+    if isinstance((product := parse_name(req, 'product_name')), func.HttpResponse):
+        return product
+    
+    # Start date
+    if isinstance((start_date := parse_date(req, 'start_date')), func.HttpResponse):
+        return start_date
+    
+    # End date
+    if isinstance((end_date := parse_date(req, 'end_date')), func.HttpResponse):
+        return end_date
+    
     rasters = DATABASE.get_grids_by_resolution(resolution_name='Neighbors=100, kernel=linear')
+    
     if rasters is None:
-        return create_error_response('resolution', "did not exist in the database", 'Neighbors=100, kernel=linear', 400, None)
-        return func.HttpResponse(json.dumps({'status': "ERROR"}), status_code = 400, headers=GLOBAL_HEADERS)
+        return create_error_response('resolution', "did not exist in the database", resolution, 400, None)
     grids = [xarray_operations.raster_to_xarray(raster) for raster in rasters]
     zip_buffer = io.BytesIO()
     with zipfile.ZipFile(zip_buffer, "a", zipfile.ZIP_DEFLATED, False) as zip_file:
         for grid in grids:
             file_name = str(grid.time.data).split('T')[0]
             zip_file.writestr(f"{file_name}.nc", grid.to_netcdf(None))
-    return func.HttpResponse(json.dumps({'status': "success"}), status_code = 200, headers=GLOBAL_HEADERS)
+    return func.HttpResponse(json.dumps({'status': "success", 'file': zip_file}), status_code = 200, headers=GLOBAL_HEADERS)
