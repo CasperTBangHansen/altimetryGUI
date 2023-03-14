@@ -48,10 +48,11 @@ def parse_date(req: func.HttpRequest, param: str) -> func.HttpResponse | Any:
         return create_error_response(param, "has an invalid format", date_str, 400, "'YYYY-mm-dd'")
 
 def main(req: func.HttpRequest) -> func.HttpResponse:
+    logging.info(f"Requesting data")
     # Resolution name
-    if isinstance((resolution := parse_name(req, 'name')), func.HttpResponse):
+    if isinstance((resolution := parse_name(req, 'resolution_name')), func.HttpResponse):
         return resolution
-
+    
     # Product name
     if isinstance((product := parse_name(req, 'product_name')), func.HttpResponse):
         return product
@@ -63,7 +64,7 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
     # End date
     if isinstance((end_date := parse_date(req, 'end_date')), func.HttpResponse):
         return end_date
-    
+    logging.info(f"Requesting data {resolution}, {product}, {start_date}, {end_date}")
     rasters = DATABASE.get_grids_by_resolution(resolution_name='Neighbors=100, kernel=linear')
     
     if rasters is None:

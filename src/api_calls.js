@@ -1,7 +1,7 @@
 var products;
 
-async function getData() {
-    const URL ='https://orange-island-0aafb1f03.2.azurestaticapps.net/api/GetData';
+async function getData(resolution_name, product_name, start_date, end_date) {
+    const URL = `https://orange-island-0aafb1f03.2.azurestaticapps.net/api/GetData?resolution_name=${resolution_name}&product_name=${product_name}&start_date=${start_date}&end_date=${end_date}`;
     // Process data from api
     return await fetch(URL)
     .then(response => {
