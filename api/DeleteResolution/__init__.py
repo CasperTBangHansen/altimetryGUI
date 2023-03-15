@@ -22,7 +22,7 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
     if not parse_login(req, DATABASE):
         return func.HttpResponse(
             json.dumps({"status": "failed", "error": "Username or password was not passed or where incorrect"}),
-            status_code=404,
+            status_code=400,
             headers=GLOBAL_HEADERS
         )
     # Get parameters and check them

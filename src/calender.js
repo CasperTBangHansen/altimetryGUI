@@ -74,7 +74,7 @@ function CalendarControl(id) {
         monthLabel.innerHTML = calendarControl.calMonthName[calendar.getMonth()];
       },
       selectDate: function (e) {
-        var month_str = calendar.getMonth().toLocaleString('en-US', {
+        var month_str = (calendar.getMonth() + 1).toLocaleString('en-US', {
           minimumIntegerDigits: 2,
           useGrouping: false
         })

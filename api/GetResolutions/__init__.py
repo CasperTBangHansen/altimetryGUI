@@ -34,7 +34,7 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
     try:
         resolutions = DATABASE.get_resolutions_by_product(product_name=product_name, product_id=product_id)
         if resolutions is None:
-            return func.HttpResponse(json.dumps({"status": "failed", "error": "product did not exist"}), status_code = 404, headers=GLOBAL_HEADERS)
+            return func.HttpResponse(json.dumps({"status": "failed", "error": "product did not exist"}), status_code = 400, headers=GLOBAL_HEADERS)
         
         # If successfull format the resolution table
         resolution_dict = tables.get_fields_as_dict(resolutions)

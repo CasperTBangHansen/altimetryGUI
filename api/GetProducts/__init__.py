@@ -48,5 +48,5 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
         return func.HttpResponse(json.dumps({"status": "success", "type": response_type, "products": products}), status_code = 200, headers=GLOBAL_HEADERS)
     except Exception as e:
         trace = traceback.format_exception(e)
-        return func.HttpResponse(json.dumps({"status": "failed" , "error" : trace}), status_code = 500, headers=GLOBAL_HEADERS)
+        return func.HttpResponse(json.dumps({"status": "failed" , "error" : trace}), status_code = 400, headers=GLOBAL_HEADERS)
     
